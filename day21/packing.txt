@@ -1,0 +1,26 @@
+In SFTTrainer (Supervised Fine-Tuning Trainer) — like the one used in Hugging Face’s trl or other transformer fine-tuning frameworks — the packing parameter controls how input sequences are combined to maximize GPU utilization during training.
+
+
+Let’s say the model can take 1000 words at a time.
+And you have 3 samples:
+Sample 1 → 300 words
+Sample 2 → 200 words
+Sample 3 → 400 words
+
+If packing = False,
+each sample is used alone and filled with empty space (padding) like this:
+
+
+[Sample 1 + 700 empty]
+[Sample 2 + 800 empty]
+[Sample 3 + 600 empty]
+
+That wastes space and time.
+
+If packing = True,
+the trainer joins them together:
+
+[Sample 1 + Sample 2 + Sample 3] = 900 words
+
+
+Now it fits in one batch — no space wasted, training is faster.
